@@ -92,7 +92,7 @@ packages:
     source: hosted
     version: "2.0.1"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       sha256: db2ff852ed77090ba9f62d3611e4208a3d11dfa35991a81ae724c113fcb3e3f7
@@ -168,13 +168,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
-  ta_common:
-    dependency: "direct main"
-    description:
-      path: ta_common
-      relative: true
-    source: path
-    version: "1.0.0+1"
   term_glyph:
     dependency: transitive
     description:
