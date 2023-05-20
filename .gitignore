@@ -1,3 +1,6 @@
+# c code
+*.exe
+
 # Miscellaneous
 *.class
 *.log
