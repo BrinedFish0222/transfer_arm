@@ -1,3 +1,4 @@
+import 'package:common_library/utils/constants/mouse_event.dart';
 import 'package:common_library/utils/log_util.dart';
 import 'package:common_library/utils/mouse_util.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     LogUtil.getInstance().debug("_incrementCounter run ...");
     _x += 100;
     MouseUtil.mouseMove(x: _x, y: _x, shake: 0);
+    MouseUtil.mouseClick(mouseEvent: MouseEvent.leftClick);
     setState(() {
       _counter++;
     });
