@@ -1,4 +1,4 @@
-name: ta_common
+name: common_library
 description: A new Flutter module project.
 
 # The following defines the version and build number for your application.
@@ -18,7 +18,7 @@ description: A new Flutter module project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=3.0.1 <4.0.0'
 
 dependencies:
   flutter:
@@ -84,5 +84,5 @@ flutter:
   # identifiers, which may be completely independent or the same as these.
   module:
     androidX: true
-    androidPackage: com.example.ta_common
-    iosBundleIdentifier: com.example.taCommon
+    androidPackage: com.example.common_library
+    iosBundleIdentifier: com.example.commonLibrary

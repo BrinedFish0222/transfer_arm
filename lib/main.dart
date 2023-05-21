@@ -1,5 +1,5 @@
+import 'package:common_library/utils/log_util.dart';
 import 'package:flutter/material.dart';
-import 'package:ta_common/utils/log_util.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,8 +34,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    LogUtil.getInstance().debug("_incrementCounter run ...");
     setState(() {
-      LogUtil.getInstance().debug('msg');
       _counter++;
     });
   }
