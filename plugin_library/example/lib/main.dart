@@ -57,6 +57,9 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Text('Running on: $_platformVersion\n'),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: (){
+          _pluginLibraryPlugin.getPlatformVersion();
+        }, child: const Icon(Icons.add),),
       ),
     );
   }

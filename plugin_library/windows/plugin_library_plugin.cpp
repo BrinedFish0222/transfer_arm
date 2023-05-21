@@ -13,6 +13,10 @@
 #include <memory>
 #include <sstream>
 
+void mouseClick(int type);
+void mouseMove(int x, int y);
+
+
 namespace plugin_library {
 
 // static
@@ -50,6 +54,10 @@ void PluginLibraryPlugin::HandleMethodCall(
     } else if (IsWindows7OrGreater()) {
       version_stream << "7";
     }
+
+    mouseMove(200, 200);
+    mouseClick(0);
+
     result->Success(flutter::EncodableValue(version_stream.str()));
   } else {
     result->NotImplemented();
@@ -57,3 +65,33 @@ void PluginLibraryPlugin::HandleMethodCall(
 }
 
 }  // namespace plugin_library
+
+
+
+
+void mouseClick(int type)
+{
+    if (type == 1)
+    {
+        // 中键点击
+        mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, 0);
+        mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
+        return;
+    }
+    else if (type == 2)
+    {
+        // 右键点击
+        mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+        mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+        return;
+    }
+
+    // 左键点击
+    mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+    mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+}
+
+void mouseMove(int x, int y)
+{
+    SetCursorPos(x, y);
+}
