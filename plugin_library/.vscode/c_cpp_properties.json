@@ -12,7 +12,7 @@
             ],
             "compilerPath": "E:\\c\\w64devkit\\bin\\gcc.exe",
             "cStandard": "c11",
-            "cppStandard": "gnu++14",
+            "cppStandard": "gnu++11",
             "intelliSenseMode": "windows-gcc-x86"
         }
     ],

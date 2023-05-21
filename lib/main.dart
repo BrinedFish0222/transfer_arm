@@ -1,4 +1,5 @@
 import 'package:common_library/utils/log_util.dart';
+import 'package:common_library/utils/mouse_util.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,9 +33,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _x = 100;
 
   void _incrementCounter() {
     LogUtil.getInstance().debug("_incrementCounter run ...");
+    _x += 100;
+    MouseUtil.mouseMove(x: _x, y: _x, shake: 0);
     setState(() {
       _counter++;
     });

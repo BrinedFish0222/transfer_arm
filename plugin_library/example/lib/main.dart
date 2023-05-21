@@ -19,6 +19,10 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   final _pluginLibraryPlugin = PluginLibrary();
 
+  int _x = 100;
+  int _y = 100;
+  int? _mouseMoveResult;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +59,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('Running on: $_platformVersion\n x: $_x, y: $_y, _mouseMoveResult: $_mouseMoveResult'),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: (){
-          _pluginLibraryPlugin.getPlatformVersion();
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          _x += 100;
+          _y += 100;
+          await _pluginLibraryPlugin.mouseMove(x: _x, y: _y);
+          setState(() {});
         }, child: const Icon(Icons.add),),
       ),
     );

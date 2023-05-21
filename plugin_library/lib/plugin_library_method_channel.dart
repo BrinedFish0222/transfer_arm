@@ -14,4 +14,10 @@ class MethodChannelPluginLibrary extends PluginLibraryPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<void> mouseMove({required int x, required int y}) async {
+    return await methodChannel.invokeMethod<void>('mouseMove', [x, y]);
+  }
+
 }
