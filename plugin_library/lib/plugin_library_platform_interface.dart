@@ -27,7 +27,11 @@ abstract class PluginLibraryPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-   Future<void> mouseMove({required int x, required int y}) {
+  Future<void> mouseMove({required int x, required int y}) {
+    throw UnimplementedError('mouseMove() has not been implemented.');
+  }
+
+  Future<void> mouseClick({required int type}) {
     throw UnimplementedError('mouseMove() has not been implemented.');
   }
 }

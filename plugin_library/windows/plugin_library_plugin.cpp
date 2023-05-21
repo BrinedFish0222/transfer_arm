@@ -76,13 +76,28 @@ namespace plugin_library
       }
       // 获取参数1 int
       int arg1 = std::get<int>(arguments->at(0));
-      // 获取参数2 double
+      // 获取参数2
       int arg2 = std::get<int>(arguments->at(1));
 
       mouseMove(arg1, arg2);
 
       result->Success();
     }
+    else if (method_call.method_name().compare("mouseClick") == 0)
+    {
+      const flutter::EncodableList *arguments = std::get_if<flutter::EncodableList>(method_call.arguments());
+      if (!arguments)
+      {
+        result->Error("arguments error");
+        return;
+      }
+
+      int type = std::get<int>(arguments->at(0));
+      mouseClick(type);
+
+      result->Success();
+    }
+
     else
     {
       result->NotImplemented();

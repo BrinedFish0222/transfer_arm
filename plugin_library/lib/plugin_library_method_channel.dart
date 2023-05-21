@@ -20,4 +20,9 @@ class MethodChannelPluginLibrary extends PluginLibraryPlatform {
     return await methodChannel.invokeMethod<void>('mouseMove', [x, y]);
   }
 
+  @override
+  Future<void> mouseClick({required int type}) async {
+    await methodChannel.invokeMethod<void>('mouseClick', [type]);
+  }
+
 }
