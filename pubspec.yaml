@@ -23,6 +23,7 @@ dependencies:
   bot_toast: ^4.0.3
   preference_list: ^0.0.1
   tray_manager: ^0.2.0
+  flutter_screenutil: ^5.8.2
 
 dev_dependencies:
   flutter_test:
@@ -32,4 +33,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - images/
 

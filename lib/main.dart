@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fui;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:window_manager/window_manager.dart';
 
 import './pages/home.dart';
-import 'themes/themes.dart';
 import 'utilities/utilities.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +15,7 @@ void main() async {
   WindowOptions windowOptions = const WindowOptions(
     size: Size(800, 600),
     center: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: fui.Colors.transparent,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.hidden,
     windowButtonVisibility: false,
@@ -58,18 +60,21 @@ class _MyAppState extends State<MyApp> {
     final virtualWindowFrameBuilder = VirtualWindowFrameInit();
     final botToastBuilder = BotToastInit();
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightThemeData,
-      darkTheme: darkThemeData,
-      themeMode: _themeMode,
-      builder: (context, child) {
-        child = virtualWindowFrameBuilder(context, child);
-        child = botToastBuilder(context, child);
-        return child;
+    return ScreenUtilInit(
+      designSize: const Size(800, 600),
+      builder: (BuildContext context, Widget? child) {
+        return FluentApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: _themeMode,
+          builder: (context, child) {
+            child = virtualWindowFrameBuilder(context, child);
+            child = botToastBuilder(context, child);
+            return child;
+          },
+          navigatorObservers: [BotToastNavigatorObserver()],
+          home: const HomePage(),
+        );
       },
-      navigatorObservers: [BotToastNavigatorObserver()],
-      home: const HomePage(),
     );
   }
 }

@@ -178,6 +178,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_screenutil:
+    dependency: "direct main"
+    description:
+      name: flutter_screenutil
+      sha256: b3e155ee4f2cf5b21a2e15182d1c49c848147ed47f62083fc9a9beccb85f59f9
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.8.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
