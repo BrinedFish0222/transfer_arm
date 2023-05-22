@@ -14,6 +14,15 @@ dependencies:
     path: ./common_library
 
   cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  go_router: ^7.1.1
+  json_serializable: ^6.7.0
+  fluent_ui: ^4.6.1
+  url_launcher: ^6.1.11
+  window_manager: ^0.3.4
+  bot_toast: ^4.0.3
+  preference_list: ^0.0.1
+  tray_manager: ^0.2.0
 
 dev_dependencies:
   flutter_test:
