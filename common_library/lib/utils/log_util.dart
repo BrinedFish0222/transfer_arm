@@ -1,33 +1,23 @@
 import 'package:logger/logger.dart';
 
-class LogUtil  {
+class LogUtil {
+  static var logger = Logger();
 
-  static final LogUtil _instance = LogUtil._internal();
+  static const String _logPre = '#### 机械手日志 ####';
 
-  var logger = Logger();
-  static const String _logPre = '#### 机械手日志：';
-
-  // 私有的命名构造函数
-  LogUtil._internal();
-
-  factory LogUtil.getInstance() {
-    return _instance;
+  static void error(String msg) {
+    logger.e("$_logPre\n$msg");
   }
 
-  void error(String msg) {
-    logger.e("$_logPre$msg");
+  static void info(String msg) {
+    logger.i("$_logPre\n$msg");
   }
 
-  void info(String msg) {
-    logger.i("$_logPre$msg");
+  static void warning(String msg) {
+    logger.w("$_logPre\n$msg");
   }
 
-  void warning (String msg) {
-    logger.w("$_logPre$msg");
+  static void debug(String msg) {
+    logger.d("$_logPre\n$msg");
   }
-
-  void debug (String msg) {
-    logger.d("$_logPre$msg");
-  }
-
 }
