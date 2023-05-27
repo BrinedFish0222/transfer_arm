@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:transfer_arm/pages/game_scirpt/game_script_home_page.dart';
+
+import 'config/router_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,13 +24,9 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            home: Scaffold(
-              appBar: AppBar(
-                title: const Text('机械手'),
-              ),
-              body: const GameScriptHomePage(),
-            ),
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: routers,
           );
         });
   }

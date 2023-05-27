@@ -39,32 +39,13 @@ class CommonWidgetUtils {
     );
   }
 
-  /// showDialog
-  static Future<bool> isDeleteDialog(context, {String? content}) async {
-    bool? flag = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("提示"),
-          content: Text(content ?? "确定删除吗？"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text("取消"),
-            ),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: const Text("确定")),
-          ],
-        );
-      },
-    );
-
-    return flag ?? false;
+  static buildBottomSheet<T>({required BuildContext context, required Widget child}) async {
+    return await showModalBottomSheet<T>(context: context, builder: (context) {
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: child,
+      );
+    });
   }
 
   /// 分页插件：无数据显示

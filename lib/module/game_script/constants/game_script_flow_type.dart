@@ -1,0 +1,4 @@
+enum GameScriptFlowType {
+  mouse,
+  keyboard,
+}

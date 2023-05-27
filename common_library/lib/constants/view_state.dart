@@ -13,7 +13,7 @@ class ViewStateError {
   String? message;
   String errno;
 
-  ViewStateError(this.errno, {this.message}) {}
+  ViewStateError(this.errno, {this.message});
 
   @override
   String toString() {

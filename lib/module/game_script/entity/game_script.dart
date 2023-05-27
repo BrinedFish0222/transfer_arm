@@ -1,14 +1,18 @@
+import 'package:common_library/model/view_state_model.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'game_script_flow.dart';
 
 part 'game_script.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class GameScript {
-
   int? id;
   String name;
+  List<GameScriptFlow>? flowList;
 
-  GameScript({this.id, required this.name});
+  GameScript({this.id, required this.name, this.flowList});
 
   static List<GameScript> fromJsonList(List dataList) {
     return dataList.map((e) => GameScript.fromJson(e)).toList();
