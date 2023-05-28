@@ -8,6 +8,7 @@ class AppIcons {
   static const IconData delete = Icons.delete;
 
   static const IconData start = Icons.play_arrow;
+  static const IconData stop = Icons.stop;
   static const IconData eye = Icons.remove_red_eye_outlined;
   static const IconData close = Icons.close;
   static const IconData settings = Icons.settings;

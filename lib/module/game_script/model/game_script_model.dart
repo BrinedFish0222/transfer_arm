@@ -1,9 +1,11 @@
 import 'package:common_library/model/common_model.dart';
 import 'package:common_library/utils/collection_util.dart';
 import 'package:common_library/utils/database_helper.dart';
+import 'package:common_library/utils/log_util.dart';
 import 'package:transfer_arm/config/db_config.dart';
 import 'package:transfer_arm/module/game_script/entity/game_script_flow.dart';
 import 'package:transfer_arm/module/game_script/mapper/game_script_flow_mapper.dart';
+import 'package:transfer_arm/module/game_script/script_helper/game_script_helper.dart';
 
 import '../entity/game_script.dart';
 
@@ -11,6 +13,27 @@ class GameScriptModel extends CommonModel<GameScript> {
   GameScriptModel({super.data});
 
   final String _tableName = DbConfig.gameScript.tableName;
+
+  /// 脚本运行状态
+  bool scriptRunStatus = false;
+
+  /// 改变脚本运行状态
+  void changeScriptRunStatus({bool? status}) async {
+    scriptRunStatus = status ?? !scriptRunStatus;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 3));
+    if (scriptRunStatus) {
+      await loadDbScript();
+      GameScriptHelper.getInstance().run(data).onError((error, stackTrace) {
+        LogUtil.debug(error.toString());
+        scriptRunStatus = !scriptRunStatus;
+      });
+    } else {
+      GameScriptHelper.getInstance().stop();
+    }
+    notifyListeners();
+  }
 
   /// 存储脚本数据到数据库
   void saveGameScriptDb() async {

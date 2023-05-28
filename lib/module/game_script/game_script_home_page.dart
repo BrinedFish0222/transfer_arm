@@ -26,7 +26,14 @@ class GameScriptHomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () => _createEvent(context: context, model: model), child: const Text("新建")),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton(onPressed: () => _createEvent(context: context, model: model), child: const Text("新建")),
+                      SizedBox(width: CommonWidgetConfig.weight,),
+                      const Expanded(child: Text('想暂停脚本，切回软件界面，按下空格即可', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),))
+                    ],
+                  ),
                   const Expanded(child: GameScriptListWidget()),
                 ],
               ),

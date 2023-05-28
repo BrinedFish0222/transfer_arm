@@ -1,5 +1,3 @@
-
-
 import 'package:common_library/utils/constants/mouse_event.dart';
 import 'package:plugin_library/plugin_library.dart';
 
@@ -7,13 +5,12 @@ import 'package:plugin_library/plugin_library.dart';
 class MouseUtil {
   static final _pluginLibraryPlugin = PluginLibrary();
 
-  static void mouseMove({required int x, required int y, int shake = 0}) {
+  static Future<void> mouseMove({required int x, required int y}) async {
     final pluginLibraryPlugin = PluginLibrary();
-    pluginLibraryPlugin.mouseMove(x: x, y: y);
+    await pluginLibraryPlugin.mouseMove(x: x, y: y);
   }
 
-  static void mouseClick({required MouseEvent mouseEvent}) {
-    _pluginLibraryPlugin.mouseClick(type: mouseEvent.value);
+  static Future<void> mouseClick({required MouseEvent mouseEvent}) async {
+    await _pluginLibraryPlugin.mouseClick(type: mouseEvent.value);
   }
-
 }

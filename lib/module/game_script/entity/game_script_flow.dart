@@ -19,7 +19,7 @@ class GameScriptFlow extends CommonEntity {
   int? axisX;
   int? axisY;
 
-  /// 坐标浮动数
+  /// 坐标浮动数 / 浮动数
   int? axisFloat;
 
   /// 等待毫秒值
@@ -32,7 +32,7 @@ class GameScriptFlow extends CommonEntity {
       this.mouseEvent = MouseEvent.leftClick,
       this.axisX,
       this.axisY,
-      this.axisFloat,
+      this.axisFloat = 5,
       this.orderNum = 1,
       this.waitMillisecond});
 
