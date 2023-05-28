@@ -10,7 +10,6 @@ class CommonWidgetUtils {
       String? hintText,
       String? confirmBtnText,
       bool hasBackBtn = true}) async {
-
     String result = '';
 
     return await showDialog<String>(
@@ -39,13 +38,19 @@ class CommonWidgetUtils {
     );
   }
 
-  static buildBottomSheet<T>({required BuildContext context, required Widget child}) async {
-    return await showModalBottomSheet<T>(context: context, builder: (context) {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: child,
-      );
-    });
+  static buildBottomSheet<T>(
+      {required BuildContext context,
+      required Widget child,
+      bool isDismissible = true, double heightRadio = 0.5}) async {
+    return await showModalBottomSheet<T>(
+        context: context,
+        isDismissible: isDismissible,
+        builder: (context) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * heightRadio,
+            child: child,
+          );
+        });
   }
 
   /// 分页插件：无数据显示

@@ -11,15 +11,20 @@ GameScriptFlow _$GameScriptFlowFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int?,
       type: $enumDecodeNullable(_$GameScriptFlowTypeEnumMap, json['type']) ??
           GameScriptFlowType.mouse,
-      mouseEvent: $enumDecodeNullable(_$MouseEventEnumMap, json['mouse_event']),
+      mouseEvent:
+          $enumDecodeNullable(_$MouseEventEnumMap, json['mouse_event']) ??
+              MouseEvent.leftClick,
       axisX: json['axis_x'] as int?,
       axisY: json['axis_y'] as int?,
       axisFloat: json['axis_float'] as int?,
       orderNum: json['order_num'] as int? ?? 1,
+      waitMillisecond: json['wait_millisecond'] as int?,
     );
 
 Map<String, dynamic> _$GameScriptFlowToJson(GameScriptFlow instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'order_num': instance.orderNum,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -33,13 +38,13 @@ Map<String, dynamic> _$GameScriptFlowToJson(GameScriptFlow instance) {
   writeNotNull('axis_x', instance.axisX);
   writeNotNull('axis_y', instance.axisY);
   writeNotNull('axis_float', instance.axisFloat);
-  val['order_num'] = instance.orderNum;
+  writeNotNull('wait_millisecond', instance.waitMillisecond);
   return val;
 }
 
 const _$GameScriptFlowTypeEnumMap = {
   GameScriptFlowType.mouse: 'mouse',
-  GameScriptFlowType.keyboard: 'keyboard',
+  GameScriptFlowType.wait: 'wait',
 };
 
 const _$MouseEventEnumMap = {

@@ -5,4 +5,6 @@ import '../entity/game_script.dart';
 
 class GameScriptModel extends CommonModel<GameScript>{
 
+
+  GameScriptModel({super.data});
 }

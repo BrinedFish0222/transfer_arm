@@ -7,11 +7,11 @@ class ConfirmDialogUtils {
   }
 
   static Future<bool> isSaveDialog(context) async {
-    return await isConfirmDialog(context, content: '是否保存', confirmBtnText: '保存');
+    return await isConfirmDialog(context, content: '是否保存', confirmBtnText: '保存', cancelBtnText: '不保存');
   }
 
 
-  static Future<bool> isConfirmDialog(context, {String? content, String? title, String? confirmBtnText}) async {
+  static Future<bool> isConfirmDialog(context, {String? content, String? title, String? confirmBtnText, String? cancelBtnText}) async {
     bool? flag = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -23,7 +23,7 @@ class ConfirmDialogUtils {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text("取消"),
+              child: Text(cancelBtnText ?? "取消"),
             ),
             TextButton(
                 onPressed: () {

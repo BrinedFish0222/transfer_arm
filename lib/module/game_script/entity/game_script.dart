@@ -1,5 +1,3 @@
-import 'package:common_library/model/view_state_model.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'game_script_flow.dart';

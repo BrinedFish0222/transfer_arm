@@ -8,6 +8,9 @@ part 'game_script_flow.g.dart';
     explicitToJson: true, fieldRename: FieldRename.snake, includeIfNull: false)
 class GameScriptFlow {
 
+  /// 序号
+  int orderNum;
+
   int? id;
   GameScriptFlowType type;
 
@@ -17,18 +20,18 @@ class GameScriptFlow {
   int? axisY;
   /// 坐标浮动数
   int? axisFloat;
-  /// 序号
-  int orderNum;
 
+  /// 等待毫秒值
+  int? waitMillisecond;
 
   GameScriptFlow(
       {this.id,
       this.type = GameScriptFlowType.mouse,
-      this.mouseEvent,
+      this.mouseEvent = MouseEvent.leftClick,
       this.axisX,
       this.axisY,
       this.axisFloat,
-      this.orderNum = 1});
+      this.orderNum = 1, this.waitMillisecond});
 
   static List<GameScriptFlow> fromJsonList(List dataList) {
     return dataList.map((e) => GameScriptFlow.fromJson(e)).toList();
