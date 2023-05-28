@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 
 /// app配置
 class AppConfig {

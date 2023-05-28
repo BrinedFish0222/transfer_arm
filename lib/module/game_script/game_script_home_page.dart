@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:common_library/constants/common_widget_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:transfer_arm/config/router_config.dart';
 import 'package:transfer_arm/module/game_script/widget/game_script_flow_page.dart';
 import 'package:transfer_arm/module/game_script/widget/game_script_list_widget.dart';
 
@@ -14,7 +17,7 @@ class GameScriptHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GameScriptModel>(
-      create: (_) => GameScriptModel(),
+      create: (_) => GameScriptModel()..loadDbScriptList(),
       child: Consumer<GameScriptModel>(
         builder: (context, model, _) {
           return Scaffold(
@@ -37,7 +40,7 @@ class GameScriptHomePage extends StatelessWidget {
   _createEvent({required BuildContext context, required GameScriptModel model}) async {
     GameScript? gameScript = await context.pushNamed<GameScript>(
         GameScriptFlowPage.routerPath,
-        queryParameters: GameScript(name: '').toJson());
+        queryParameters: {AppRouterConfig.paramName: jsonEncode(GameScript(name: ''))});
     if (gameScript == null) {
       return;
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// 通用widget
-class CommonWidgetUtils {
+class CommonWidgetUtil {
   static Future<String?> buildInputDialog(
       {required BuildContext context,
       required String title,

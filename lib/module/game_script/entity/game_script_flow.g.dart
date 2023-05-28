@@ -9,6 +9,7 @@ part of 'game_script_flow.dart';
 GameScriptFlow _$GameScriptFlowFromJson(Map<String, dynamic> json) =>
     GameScriptFlow(
       id: json['id'] as int?,
+      gameScriptId: json['game_script_id'] as int?,
       type: $enumDecodeNullable(_$GameScriptFlowTypeEnumMap, json['type']) ??
           GameScriptFlowType.mouse,
       mouseEvent:
@@ -22,9 +23,7 @@ GameScriptFlow _$GameScriptFlowFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$GameScriptFlowToJson(GameScriptFlow instance) {
-  final val = <String, dynamic>{
-    'order_num': instance.orderNum,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -33,6 +32,8 @@ Map<String, dynamic> _$GameScriptFlowToJson(GameScriptFlow instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('game_script_id', instance.gameScriptId);
+  val['order_num'] = instance.orderNum;
   val['type'] = _$GameScriptFlowTypeEnumMap[instance.type]!;
   writeNotNull('mouse_event', _$MouseEventEnumMap[instance.mouseEvent]);
   writeNotNull('axis_x', instance.axisX);

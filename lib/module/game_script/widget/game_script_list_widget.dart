@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:common_library/constants/common_widget_config.dart';
 import 'package:common_library/utils/collection_util.dart';
+import 'package:common_library/utils/confirm_dialog_utils.dart';
 import 'package:common_library/widget/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:transfer_arm/config/router_config.dart';
 
 import '../entity/game_script.dart';
 import '../model/game_script_model.dart';
@@ -51,15 +55,29 @@ class _GameScriptListWidgetState extends State<GameScriptListWidget> {
                                 flex: 2,
                                 child: IconButton(
                                     onPressed: () async {
-                                      await context.pushNamed<GameScript>(
+                                      GameScript? result = await context.pushNamed<GameScript>(
                                           GameScriptFlowPage.routerPath,
-                                          queryParameters: gameScript.toJson());
+                                          queryParameters: {AppRouterConfig.paramName: jsonEncode(gameScript.toJson())});
+
+
+                                      if (result == null) {
+                                        return;
+                                      }
+
+                                      var index = model.dataList?.indexWhere((element) => result.id == element.id);
+                                      model.dataList?[index!] = result;
                                     },
                                     icon: const Icon(AppIcons.edit))),
                             Expanded(
                                 flex: 2,
                                 child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      bool isDel = await ConfirmDialogUtils.isDeleteDialog(context);
+                                      if (!isDel) {
+                                        return;
+                                      }
+                                      model.deleteById(gameScript.id);
+                                    },
                                     icon: const Icon(AppIcons.delete))),
                           ],
                         ))

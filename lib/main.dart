@@ -1,4 +1,3 @@
-import 'package:common_library/utils/database_helper.dart';
 import 'package:common_library/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +7,7 @@ import 'config/router_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
-  await DatabaseHelper.internal().initDatabase();
+  // await DatabaseHelper.internal().initDatabase();
   runApp(const MyApp());
 }
 
