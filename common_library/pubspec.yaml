@@ -46,6 +46,7 @@ dependencies:
   fluttertoast: ^8.2.2
   sqflite: ^2.2.8+4
   sqflite_common_ffi: any
+  image_picker: any
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:iquant/common/widget/common_widget.dart';
 
 /// 多图片上传组件
 class ImageUploadWidget extends StatefulWidget {
@@ -22,12 +20,12 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
 
   Future<void> _pickImage() async {
     if (widget.maxNum != null && _images.length >= widget.maxNum!) {
-      CommonWidget.showToast(text: '超过上限${widget.maxNum}张');
+      debugPrint('超过上限${widget.maxNum}张');
       return;
     }
 
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -48,10 +46,16 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
             height: widget.imageSize,
             width: widget.imageSize,
             child: InkWell(
-              onTap: () => Get.to(FullScreenImagePage(imageUrl: image.path, image: Image.file(
-                image,
-                fit: BoxFit.cover,
-              ))),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenImagePage(imageUrl: image.path, image: Image.file(
+                      image,
+                      fit: BoxFit.cover,
+                    )),
+                  ),
+                );
+              },
               child: Stack(
                 children: [
                   SizedBox(
