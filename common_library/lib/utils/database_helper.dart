@@ -1,183 +1,92 @@
-import 'dart:convert';
-
-import 'package:common_library/utils/collection_util.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:transfer_arm/objectbox.g.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
-import 'package:transfer_arm/config/db_config.dart';
-import 'package:transfer_arm/module/game_script/entity/game_script_flow.dart';
-
-import '../entity/common_entity.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper.internal();
+  static late DatabaseHelper _databaseHelper;
 
-  factory DatabaseHelper() => _instance;
+  late final Store store;
 
-  static Database? _database;
+  DatabaseHelper._create(this.store);
 
-  DatabaseHelper.internal();
+  static DatabaseHelper get instance => _databaseHelper;
 
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
-
-    _database = await initDatabase();
-    return _database!;
+  static Future<DatabaseHelper> create() async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    Store store = await openStore(directory: join(docsDir.path, "obx-example"));
+    _databaseHelper = DatabaseHelper._create(store);
+    return _databaseHelper;
   }
 
-  Future<Database> initDatabase() async {
-    sqflite_ffi.sqfliteFfiInit();
-
-    // Initialize databaseFactory
-    databaseFactory = databaseFactoryFfi;
-
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, DbConfig.dbName);
-
-    // 创建数据库表或打开现有数据库
-    Database database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) {
-        // 在此处创建表
-        for (String sql in DbConfig.initCreateTableSql) {
-          db.execute(sql);
-        }
-      },
-    );
-
-    return database;
+  Box<T> getBox<T>() {
+    return store.box<T>();
   }
 
-  /// TODO:优化，使用批处理，手动提交事务。
-  Future<void> insertBatch<T>(
-      {required String tableName, required List<T>? dataList}) async {
-    if (CollectionUtil.isEmpty(dataList)) {
-      return;
-    }
+  /// 开启事务
+  Future<T> transaction<T>(T Function() function, {TxMode txMode = TxMode.write}) async {
+    final store = Store(getObjectBoxModel());
 
-    for (T data in dataList!) {
-      await insert<T>(tableName: tableName, data: data);
-    }
+    return store.runInTransaction(txMode, function);
   }
 
-  /// TODO:优化，使用批处理，手动提交事务。
-  Future<void> saveBatch<T extends CommonEntity>(
-      {required String tableName, required List<T> dataList}) async {
-    for (var data in dataList) {
-      if (data.id == null) {
-        insert(tableName: tableName, data: data);
-      } else {
-        updateById(tableName: tableName, data: data);
-      }
-    }
+  Future<List<T>> select<T>([Condition<T>? qc]) async {
+    final box = store.box<T>();
+    final query = box.query(qc).build();
+    List<T> result = query.find();
+    query.close();
+    return result;
   }
 
-  Future<int> save<T extends CommonEntity>(
-      {required String tableName, required T data}) async {
-    if (data.id == null) {
-      return insert(tableName: tableName, data: data);
-    } else {
-      updateById(tableName: tableName, data: data);
-      return data.id!;
-    }
+  Future<List<int>> saveBatch<T>({required List<T>? dataList}) async {
+    final box = store.box<T>();
+    return box.putMany(dataList!);
   }
 
-  Future<int> insert<T>({required String tableName, required T data}) async {
-    final db = await database;
-    var dataMap = jsonDecode(jsonEncode(data));
-    _filterDbSupportDataType(dataMap);
-    return await db.insert(tableName, dataMap);
+  Future<int> save<T>({required T data}) async {
+    final box = store.box<T>();
+    return box.put(data);
   }
 
-  // 示例：获取所有数据
-  Future<List<T>> listAll<T>(
-      {required String tableName,
-      required T Function(Map<String, dynamic>? json) fromJsonT}) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
-    return List.generate(maps.length, (i) {
-      return fromJsonT(maps[i]);
-    });
+  Future<List<T>> listAll<T>() async {
+    final box = store.box<T>();
+    return box.getAll();
   }
 
   /// 根据id查询数据
-  Future<T?> selectById<T>(
-      {required String tableName,
-      required int id,
-      required T Function(Map<String, dynamic>? json) fromJsonT}) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
-    if (CollectionUtil.isEmpty(maps)) {
-      return null;
-    }
-    return fromJsonT(maps[0]);
+  Future<T?> selectById<T>({
+    required int id,
+  }) async {
+    final box = store.box<T>();
+    return box.get(id);
   }
 
-  // 示例：更新数据
-  Future<void> updateById<T extends CommonEntity>(
-      {required String tableName, required T data}) async {
-    final db = await database;
-    Map<String, Object?> dataMap = jsonDecode(jsonEncode(data));
-    _filterDbSupportDataType(dataMap);
-
-    await db.update(
-      tableName,
-      dataMap,
-      where: 'id = ?',
-      whereArgs: [data.id],
-    );
-  }
-
-  /// 过滤出数据库支持的数据类型
-  void _filterDbSupportDataType(Map<String, Object?> dataMap) {
-    dataMap.removeWhere((key, value) {
-      return value == null ||
-          !(value is int || value is num || value is String);
-    });
+  /// 根据id查询数据
+  Future<List<T?>> selectByIds<T>({
+    required List<int> ids,
+  }) async {
+    final box = store.box<T>();
+    return box.getMany(ids);
   }
 
   // 示例：删除数据
-  Future<void> deleteById({required String tableName, required int id}) async {
-    final db = await database;
-    await db.delete(
-      tableName,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  Future<bool> deleteById<T>({required int id}) async {
+    final box = store.box<T>();
+    return box.remove(id);
   }
 
-  Future<void> delete({required String tableName, String? where, List<Object?>? whereArgs}) async {
-    final db = await database;
-    await db.delete(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
+  void deleteByIds<T>({required List<int> ids}) async {
+    final box = store.box<T>();
+    box.removeMany(ids);
   }
 
-  Future<List<T>?> query<T>(
-    String tableName, {
-    bool? distinct,
-    List<String>? columns,
-    String? where,
-    List<Object?>? whereArgs,
-    String? groupBy,
-    String? having,
-    String? orderBy,
-    int? limit,
-    int? offset,
-    required List<T> Function(dynamic maps) jsonToList,
-  }) async {
-    final db = await database;
-    var maps = await db.query(DbConfig.gameScriptFlow.tableName,
-        where: where, whereArgs: whereArgs);
-    if (CollectionUtil.isEmpty(maps)) {
-      return null;
-    }
+  void deleteAll<T>() async {
+    final box = store.box<T>();
+    box.removeAll();
+  }
 
-    return jsonToList(maps);
+  Future<int> count<T>() async {
+    final box = store.box<T>();
+    return box.count();
   }
 }

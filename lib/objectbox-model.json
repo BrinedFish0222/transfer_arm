@@ -1,0 +1,81 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1634303782825843416",
+      "lastPropertyId": "2:481933021446800740",
+      "name": "GameScript",
+      "properties": [
+        {
+          "id": "1:1166006080757987536",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:481933021446800740",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:9039568303748806780",
+      "lastPropertyId": "7:7272540022256050764",
+      "name": "GameScriptFlow",
+      "properties": [
+        {
+          "id": "1:209473637035779151",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4853256132399175406",
+          "name": "gameScriptId",
+          "type": 6
+        },
+        {
+          "id": "3:620431895427992267",
+          "name": "orderNum",
+          "type": 6
+        },
+        {
+          "id": "4:6198111623553788963",
+          "name": "axisX",
+          "type": 6
+        },
+        {
+          "id": "5:2256746789403195486",
+          "name": "axisY",
+          "type": 6
+        },
+        {
+          "id": "6:2835799732819659644",
+          "name": "axisFloat",
+          "type": 6
+        },
+        {
+          "id": "7:7272540022256050764",
+          "name": "waitMillisecond",
+          "type": 6
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:9039568303748806780",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

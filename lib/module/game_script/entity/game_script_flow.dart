@@ -1,13 +1,17 @@
-import 'package:common_library/entity/common_entity.dart';
 import 'package:common_library/utils/constants/mouse_event.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:transfer_arm/module/game_script/constants/game_script_flow_type.dart';
 
 part 'game_script_flow.g.dart';
 
+@Entity()
 @JsonSerializable(
     explicitToJson: true, fieldRename: FieldRename.snake, includeIfNull: false)
-class GameScriptFlow extends CommonEntity {
+class GameScriptFlow {
+  @Id()
+  int? id;
+
   int? gameScriptId;
 
   /// 序号
@@ -26,7 +30,7 @@ class GameScriptFlow extends CommonEntity {
   int? waitMillisecond;
 
   GameScriptFlow(
-      {super.id,
+      {this.id,
       this.gameScriptId,
       this.type = GameScriptFlowType.mouse,
       this.mouseEvent = MouseEvent.leftClick,

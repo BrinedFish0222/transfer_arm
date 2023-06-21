@@ -5,5 +5,8 @@
         "stdlib.h": "c",
         "mouse_utils.h": "c"
     },
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cSpell.words": [
+        "cupertino"
+    ]
 }

@@ -1,13 +1,19 @@
+import 'package:common_library/utils/database_helper.dart';
 import 'package:common_library/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'config/router_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Permission.storage.request();
+
+  await DatabaseHelper.create();
   await ScreenUtil.ensureScreenSize();
-  // await DatabaseHelper.internal().initDatabase();
+
   runApp(const MyApp());
 }
 
@@ -19,7 +25,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-
   @override
   void initState() {
     LogUtil.debug('应用程序 initState');

@@ -1,16 +1,20 @@
-import 'package:common_library/entity/common_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:objectbox/objectbox.dart';
 
 import 'game_script_flow.dart';
 
 part 'game_script.g.dart';
 
+@Entity()
 @JsonSerializable(explicitToJson: true)
-class GameScript extends CommonEntity {
+class GameScript {
+  @Id()
+  int? id;
+
   String name;
   List<GameScriptFlow>? flowList;
 
-  GameScript({super.id, required this.name, this.flowList});
+  GameScript({this.id, required this.name, this.flowList});
 
   static List<GameScript> fromJsonList(List dataList) {
     return dataList.map((e) => GameScript.fromJson(e)).toList();

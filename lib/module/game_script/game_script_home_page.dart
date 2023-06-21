@@ -17,7 +17,7 @@ class GameScriptHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GameScriptModel>(
-      create: (_) => GameScriptModel()..loadDbScriptList(),
+      create: (_) => GameScriptModel()..loadScriptList(),
       child: Consumer<GameScriptModel>(
         builder: (context, model, _) {
           return Scaffold(

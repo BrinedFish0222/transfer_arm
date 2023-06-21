@@ -40,7 +40,7 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
 
   @override
   void initState() {
-    _model = GameScriptModel(data: widget.gameScript)..loadDbScript();
+    _model = GameScriptModel(data: widget.gameScript)..loadScript();
 
     super.initState();
   }
@@ -137,7 +137,7 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
 
   _saveEvent(GameScriptModel model) {
     LogUtil.debug('保存的脚本内容：${widget.gameScript.toJson()}');
-    model.saveGameScriptDb();
+    model.save();
 
     context.pop(widget.gameScript);
   }
@@ -194,7 +194,7 @@ class GsFlowWaitWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(flow.type.desc ?? ''),
+        Text(flow.type.desc),
         if (width != null)
           SizedBox(
             width: width,

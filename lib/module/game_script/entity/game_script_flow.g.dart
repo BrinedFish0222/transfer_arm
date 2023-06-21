@@ -17,7 +17,7 @@ GameScriptFlow _$GameScriptFlowFromJson(Map<String, dynamic> json) =>
               MouseEvent.leftClick,
       axisX: json['axis_x'] as int?,
       axisY: json['axis_y'] as int?,
-      axisFloat: json['axis_float'] as int?,
+      axisFloat: json['axis_float'] as int? ?? 5,
       orderNum: json['order_num'] as int? ?? 1,
       waitMillisecond: json['wait_millisecond'] as int?,
     );
