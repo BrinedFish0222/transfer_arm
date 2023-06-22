@@ -3,8 +3,11 @@ import 'package:common_library/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 import 'config/router_config.dart';
+import 'module/game_script/model/game_script_model.dart';
+import 'module/game_script/model/game_script_run_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +16,8 @@ void main() async {
 
   await DatabaseHelper.create();
   await ScreenUtil.ensureScreenSize();
+
+
 
   runApp(const MyApp());
 }
@@ -53,15 +58,21 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: const Size(375, 812),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            routerConfig: routers,
-          );
-        });
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<GameScriptListModel>(create: (_) => GameScriptListModel()..loadScriptList()),
+        ChangeNotifierProvider<GameScriptRunModel>(create: (_) => GameScriptRunModel()),
+      ],
+      child: ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              routerConfig: routers,
+            );
+          }),
+    );
   }
 }

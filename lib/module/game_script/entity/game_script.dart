@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:objectbox/objectbox.dart';
 
+import '../../../objectbox.g.dart';
 import 'game_script_flow.dart';
 
 part 'game_script.g.dart';
@@ -12,9 +13,16 @@ class GameScript {
   int? id;
 
   String name;
+
+  String? description;
+
+  @Transient()
   List<GameScriptFlow>? flowList;
 
-  GameScript({this.id, required this.name, this.flowList});
+  /// 运行次数
+  int? runNum;
+
+  GameScript({this.id, required this.name, this.description, this.runNum, this.flowList});
 
   static List<GameScript> fromJsonList(List dataList) {
     return dataList.map((e) => GameScript.fromJson(e)).toList();

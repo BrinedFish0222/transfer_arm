@@ -9,6 +9,7 @@ class DatabaseHelper {
 
   late final Store store;
 
+
   DatabaseHelper._create(this.store);
 
   static DatabaseHelper get instance => _databaseHelper;
@@ -17,6 +18,12 @@ class DatabaseHelper {
     final docsDir = await getApplicationDocumentsDirectory();
     Store store = await openStore(directory: join(docsDir.path, "obx-example"));
     _databaseHelper = DatabaseHelper._create(store);
+
+    if (Admin.isAvailable()) {
+      // Keep a reference until no longer needed or manually closed.
+      Admin(store);
+    }
+
     return _databaseHelper;
   }
 

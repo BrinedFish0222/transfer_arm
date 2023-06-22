@@ -10,12 +10,12 @@ class GameScriptFlowModel extends CommonModel<GameScriptFlow>{
   GameScriptFlowModel({super.data});
 
   set setType(GameScriptFlowType type) {
-    data?.type = type;
+    data?.type = type.name;
     notifyListeners();
   }
 
   set setMouseEvent(MouseEvent mouseEvent) {
-    data?.mouseEvent = mouseEvent;
+    data?.mouseEvent = mouseEvent.name;
     notifyListeners();
   }
 

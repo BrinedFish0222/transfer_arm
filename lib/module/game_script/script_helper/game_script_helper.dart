@@ -5,6 +5,8 @@ import 'package:transfer_arm/module/game_script/entity/game_script.dart';
 import 'package:transfer_arm/module/game_script/entity/game_script_flow.dart';
 import 'package:transfer_arm/module/game_script/script_helper/game_script_wait_execute.dart';
 
+import '../constants/game_script_flow_type.dart';
+import 'entity/game_script_helper_run.dart';
 import 'game_script_mouse_execute.dart';
 
 class GameScriptHelper {
@@ -20,7 +22,7 @@ class GameScriptHelper {
 
   bool _isRun = false;
 
-  Future<void> run(GameScript? gameScript) async {
+  Stream<GameScriptHelperRun> run(GameScript? gameScript) async* {
     LogUtil.debug('脚本运行准备阶段');
     if (gameScript == null || CollectionUtil.isEmpty(gameScript.flowList)) {
       throw Exception('缺少脚本数据，结束运行');
@@ -29,15 +31,26 @@ class GameScriptHelper {
     _isRun = true;
 
     LogUtil.debug('脚本开始运行');
-    while(true) {
+    // 运行次数
+    int runningNum = 0;
+    while(gameScript.runNum == null ? true : runningNum <= gameScript.runNum!) {
       if (!_isRun) {
         return;
       }
 
       for (GameScriptFlow flow in gameScript.flowList!) {
-        await GameScriptWaitExecute.run(flow);
-        await GameScriptMouseExecute.run(flow);
+
+        if (flow.type == GameScriptFlowType.wait.name) {
+          await GameScriptWaitExecute.run(flow);
+        } else if (flow.type == GameScriptFlowType.mouse.name) {
+          await GameScriptMouseExecute.run(flow);
+        }
       }
+
+      runningNum += 1;
+      LogUtil.info('脚本运行$runningNum次，剩余次数：${gameScript.runNum! - runningNum}');
+
+      yield GameScriptHelperRun(runningNum: runningNum, isStop: runningNum > gameScript.runNum!);
     }
   }
 

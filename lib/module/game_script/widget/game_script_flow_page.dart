@@ -1,7 +1,10 @@
+
 import 'package:common_library/constants/input_formats.dart';
 import 'package:common_library/utils/common_widget_util.dart';
 import 'package:common_library/utils/confirm_dialog_utils.dart';
+import 'package:common_library/utils/constants/mouse_event.dart';
 import 'package:common_library/utils/log_util.dart';
+import 'package:common_library/utils/string_util.dart';
 import 'package:common_library/widget/app_icons.dart';
 import 'package:common_library/widget/app_text_field.dart';
 import 'package:common_library/widget/text_not_null_widget.dart';
@@ -11,7 +14,6 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:transfer_arm/module/game_script/constants/game_script_flow_type.dart';
-import 'package:transfer_arm/module/game_script/entity/game_script.dart';
 import 'package:transfer_arm/module/game_script/entity/game_script_flow.dart';
 import 'package:transfer_arm/module/game_script/model/game_script_model.dart';
 import 'package:transfer_arm/module/game_script/widget/game_script_flow_edit_widget.dart';
@@ -22,12 +24,9 @@ import '../../../themes/app_theme.dart';
 class GameScriptFlowPage extends StatefulWidget {
   const GameScriptFlowPage({
     Key? key,
-    required this.gameScript,
   }) : super(key: key);
 
   static const String routerPath = "/gameScript/flowPage";
-
-  final GameScript gameScript;
 
   @override
   State<GameScriptFlowPage> createState() => _GameScriptFlowPageState();
@@ -36,75 +35,69 @@ class GameScriptFlowPage extends StatefulWidget {
 class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
 
-  late GameScriptModel _model;
-
-  @override
-  void initState() {
-    _model = GameScriptModel(data: widget.gameScript)..loadScript();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<GameScriptModel>.value(
-      value: _model,
-      child: Consumer<GameScriptModel>(builder: (context, model, _) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: BackButton(
-              onPressed: () => _backEvent(model),
+    GameScriptListModel model = context.watch<GameScriptListModel>();
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () => _backEvent(model),
+        ),
+        title: const Text("脚本流程"),
+        actions: [
+          TextButton(
+              onPressed: () => _saveEvent(model),
+              child: Text(
+                '保存',
+                style: TextStyle(color: AppTheme.appBarBtnColor),
+              ))
+        ],
+      ),
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: _buildName(context, model),
             ),
-            title: const Text("脚本流程"),
-            actions: [
-              TextButton(
-                  onPressed: () => _saveEvent(model),
-                  child: Text(
-                    '保存',
-                    style: TextStyle(color: AppTheme.appBarBtnColor),
-                  ))
-            ],
-          ),
-          body: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: _buildName(context),
+            SliverToBoxAdapter(
+              child: _buildRunNum(context, model),
+            ),
+            SliverToBoxAdapter(
+              child: _buildDescription(context, model),
+            ),
+            SliverStickyHeader(
+              header: Container(
+                height: 60.0,
+                color: Theme.of(context).primaryColor,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  '流程',
+                  style: TextStyle(color: Colors.white),
                 ),
-                SliverStickyHeader(
-                  header: Container(
-                    height: 60.0,
-                    color: Theme.of(context).primaryColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      '流程',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  sliver: SliverReorderableList(
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildFlowContent(model.data!.flowList![index]);
-                    },
-                    itemCount: model.data?.flowList?.length ?? 0,
-                    onReorder: (int oldIndex, int newIndex) {},
-                  ),
-                )
-              ],
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-              onPressed: () => _buildAddScriptFlow(model),
-              child: const Icon(Icons.add)),
-        );
-      }),
+              ),
+              sliver: SliverReorderableList(
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildFlowContent(
+                      model, model.editGameScript!.flowList![index]);
+                },
+                itemCount: model.editGameScript?.flowList?.length ?? 0,
+                onReorder: (int oldIndex, int newIndex) {},
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => _buildAddScriptFlow(model),
+          child: const Icon(Icons.add)),
     );
   }
 
   /// 新增脚本流程
-  _buildAddScriptFlow(GameScriptModel model) async {
+  _buildAddScriptFlow(GameScriptListModel model) async {
     GameScriptFlow? gameScriptFlow =
         await CommonWidgetUtil.buildBottomSheet<GameScriptFlow>(
             context: context,
@@ -119,12 +112,12 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
       return;
     }
 
-    model.data?.flowList ??= [];
-    model.data?.flowList?.add(gameScriptFlow);
+    model.editGameScript?.flowList ??= [];
+    model.editGameScript?.flowList!.add(gameScriptFlow);
     model.notifyListeners();
   }
 
-  _backEvent(GameScriptModel model) async {
+  _backEvent(GameScriptListModel model) async {
     bool isBack = await ConfirmDialogUtils.isSaveDialog(context);
     if (!mounted) return;
     LogUtil.debug('isBack: $isBack');
@@ -135,14 +128,13 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
     context.pop();
   }
 
-  _saveEvent(GameScriptModel model) {
-    LogUtil.debug('保存的脚本内容：${widget.gameScript.toJson()}');
-    model.save();
-
-    context.pop(widget.gameScript);
+  _saveEvent(GameScriptListModel model) {
+    LogUtil.debug('保存的脚本内容：${model.editGameScript?.toJson()}');
+    model.saveEditGameScript();
+    context.pop();
   }
 
-  _buildName(BuildContext context) {
+  _buildName(BuildContext context, GameScriptListModel model) {
     return Padding(
       padding: EdgeInsets.all(10.w),
       child: AppTextField(
@@ -150,17 +142,45 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
         hintText: "请输入名称",
         validator: InputValidator.notNull,
         autofocus: true,
-        initialValue: widget.gameScript.name,
-        onChanged: (val) => widget.gameScript.name = val,
+        initialValue: model.editGameScript?.name,
+        onChanged: (val) => model.editGameScript?.name = val,
+      ),
+    );
+  }
+
+  /// 构建执行次数
+  _buildRunNum(BuildContext context, GameScriptListModel model) {
+    return Padding(
+      padding: EdgeInsets.all(10.w),
+      child: AppTextField(
+        title: const Text('执行次数'),
+        hintText: "请输入执行次数",
+        // validator: InputValidator.notNull,
+        initialValue: StringUtil.parseInt(model.editGameScript?.runNum),
+        onChanged: (val) =>
+            model.editGameScript?.runNum = StringUtil.toInt(val),
+      ),
+    );
+  }
+
+  _buildDescription(BuildContext context, GameScriptListModel model) {
+    return Padding(
+      padding: EdgeInsets.all(10.w),
+      child: AppTextField(
+        title: const Text('描述'),
+        hintText: "请输入描述",
+        // validator: InputValidator.notNull,
+        initialValue: model.editGameScript?.description,
+        onChanged: (val) => model.editGameScript?.description = val,
       ),
     );
   }
 
   /// 构建：流程展示内容
-  Widget _buildFlowContent(GameScriptFlow flow) {
+  Widget _buildFlowContent(GameScriptListModel model, GameScriptFlow flow) {
     double width = 20.w;
     Widget showWidget = GsFlowMouseWidget(flow: flow, width: width);
-    if (flow.type == GameScriptFlowType.wait) {
+    if (flow.type == GameScriptFlowType.wait.name) {
       showWidget = GsFlowWaitWidget(flow: flow, width: width);
     }
 
@@ -170,13 +190,15 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
         child: Row(
           children: [
             Expanded(child: showWidget),
-            IconButton(onPressed: () async {
-              bool isDel = await ConfirmDialogUtils.isDeleteDialog(context);
-              if (!isDel) {
-                  return;
-              }
-              _model.deleteFlow(flow);
-            }, icon: const Icon(AppIcons.delete))
+            IconButton(
+                onPressed: () async {
+                  bool isDel = await ConfirmDialogUtils.isDeleteDialog(context);
+                  if (!isDel) {
+                    return;
+                  }
+                  model.deleteEditGameScriptFlow(flow);
+                },
+                icon: const Icon(AppIcons.delete))
           ],
         ));
   }
@@ -194,7 +216,7 @@ class GsFlowWaitWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(flow.type.desc),
+        Text(GameScriptFlowType.getByName(flow.type).description),
         if (width != null)
           SizedBox(
             width: width,
@@ -220,25 +242,29 @@ class GsFlowMouseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(flow.mouseEvent?.desc ?? ''),
-        if (width != null)
-          SizedBox(
-            width: width,
-          ),
-        Text("x轴：${flow.axisX?.toString() ?? ''}"),
-        if (width != null)
-          SizedBox(
-            width: width,
-          ),
-        Text("y轴：${flow.axisY?.toString() ?? ''}"),
-        if (width != null)
-          SizedBox(
-            width: width,
-          ),
-        Text("浮动数：${flow.axisFloat?.toString() ?? ''}"),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          Text(GameScriptFlowType.getByName(flow.type).description),
+          if (flow.mouseEvent != null) Text('：${MouseEvent.getByName(flow.mouseEvent).description}'),
+          if (width != null)
+            SizedBox(
+              width: width,
+            ),
+          Text("x轴：${flow.axisX?.toString() ?? ''}"),
+          if (width != null)
+            SizedBox(
+              width: width,
+            ),
+          Text("y轴：${flow.axisY?.toString() ?? ''}"),
+          if (width != null)
+            SizedBox(
+              width: width,
+            ),
+          Text("浮动数：${flow.axisFloat?.toString() ?? ''}"),
+        ],
+      ),
     );
   }
 }

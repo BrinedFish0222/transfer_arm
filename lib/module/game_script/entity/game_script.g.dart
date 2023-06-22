@@ -9,7 +9,9 @@ part of 'game_script.dart';
 GameScript _$GameScriptFromJson(Map<String, dynamic> json) => GameScript(
       id: json['id'] as int?,
       name: json['name'] as String,
-      flowList: (json['flow_list'] as List<dynamic>?)
+      description: json['description'] as String?,
+      runNum: json['runNum'] as int?,
+      flowList: (json['flowList'] as List<dynamic>?)
           ?.map((e) => GameScriptFlow.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -25,6 +27,8 @@ Map<String, dynamic> _$GameScriptToJson(GameScript instance) {
 
   writeNotNull('id', instance.id);
   val['name'] = instance.name;
-  writeNotNull('flow_list', instance.flowList?.map((e) => e.toJson()).toList());
+  writeNotNull('description', instance.description);
+  writeNotNull('flowList', instance.flowList?.map((e) => e.toJson()).toList());
+  writeNotNull('runNum', instance.runNum);
   return val;
 }

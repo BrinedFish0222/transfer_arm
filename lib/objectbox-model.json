@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1634303782825843416",
-      "lastPropertyId": "2:481933021446800740",
+      "lastPropertyId": "4:3992406742229562755",
       "name": "GameScript",
       "properties": [
         {
@@ -18,13 +18,23 @@
           "id": "2:481933021446800740",
           "name": "name",
           "type": 9
+        },
+        {
+          "id": "3:3479558871568137708",
+          "name": "runNum",
+          "type": 6
+        },
+        {
+          "id": "4:3992406742229562755",
+          "name": "description",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "2:9039568303748806780",
-      "lastPropertyId": "7:7272540022256050764",
+      "lastPropertyId": "9:1935541773789482262",
       "name": "GameScriptFlow",
       "properties": [
         {
@@ -62,19 +72,33 @@
           "id": "7:7272540022256050764",
           "name": "waitMillisecond",
           "type": 6
+        },
+        {
+          "id": "8:8899350741408195742",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "9:1935541773789482262",
+          "name": "mouseEvent",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "2:9039568303748806780",
-  "lastIndexId": "0:0",
+  "lastIndexId": "3:8850099039425143",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    44054476822336929,
+    5321185581616886809,
+    8850099039425143
+  ],
   "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1

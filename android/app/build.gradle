@@ -66,6 +66,13 @@ flutter {
     source '../..'
 }
 
+configurations {
+    debugImplementation {
+        exclude group: 'io.objectbox', module: 'objectbox-android'
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:3.6.0")
 }

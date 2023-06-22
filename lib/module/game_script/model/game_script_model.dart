@@ -1,73 +1,54 @@
-import 'package:common_library/model/common_model.dart';
+import 'package:common_library/model/view_state_model.dart';
 import 'package:common_library/utils/collection_util.dart';
-import 'package:common_library/utils/log_util.dart';
 import 'package:transfer_arm/module/game_script/entity/game_script_flow.dart';
 import 'package:transfer_arm/module/game_script/mapper/game_script_flow_mapper.dart';
 import 'package:transfer_arm/module/game_script/mapper/game_script_mapper.dart';
-import 'package:transfer_arm/module/game_script/script_helper/game_script_helper.dart';
 
 import '../entity/game_script.dart';
 
-class GameScriptModel extends CommonModel<GameScript> {
-  GameScriptModel({super.data});
+/// 脚本列表
+class GameScriptListModel extends ViewStateModel {
+  /// 数据列表
+  List<GameScript> dataList = [];
 
-  /// 脚本运行状态
-  bool scriptRunStatus = false;
-
-  /// 改变脚本运行状态
-  void changeScriptRunStatus({bool? status}) async {
-    scriptRunStatus = status ?? !scriptRunStatus;
-    notifyListeners();
-
-    await Future.delayed(const Duration(seconds: 3));
-    if (scriptRunStatus) {
-      await loadScript();
-      GameScriptHelper.getInstance().run(data).onError((error, stackTrace) {
-        LogUtil.debug(error.toString());
-        scriptRunStatus = !scriptRunStatus;
-      });
-    } else {
-      GameScriptHelper.getInstance().stop();
-    }
-    notifyListeners();
-  }
-
-  loadScript() async {
-    if (data == null || data?.id == null) {
-      return;
-    }
-
-    setBusy();
-    data = await GameScriptMapper().selectById<GameScript>(data!.id!);
-    data?.flowList = await GameScriptFlowMapper().listByGameScriptId(data?.id);
-    setIdle();
-  }
+  /// 当前编辑的脚本
+  GameScript? editGameScript;
 
   /// 加载数据库脚本数据
-  loadScriptList() async {
-    dataList = await GameScriptMapper().listAll<GameScript>();
+  void loadScriptList() {
+    dataList = GameScriptMapper().listAll<GameScript>();
     notifyListeners();
   }
 
-  void deleteById(int? id) async {
+  void deleteById(int? id) {
     if (id == null) {
       return;
     }
 
-    await GameScriptMapper().deleteById<GameScript>(id);
+    GameScriptMapper().deleteById<GameScript>(id);
     if (CollectionUtil.isNotEmpty(dataList)) {
-      dataList?.removeWhere((element) => element.id == id);
+      dataList.removeWhere((element) => element.id == id);
     }
 
     notifyListeners();
   }
 
-  void deleteFlow(GameScriptFlow flow) {
-    data?.flowList?.remove(flow);
+  Future<void> deleteEditGameScriptFlow(GameScriptFlow flow) async {
+    editGameScript?.flowList?.remove(flow);
     notifyListeners();
   }
 
-  void save() {
-    GameScriptMapper().saveGameScript(data!);
+  Future<void> saveEditGameScript() async {
+    GameScriptMapper().saveGameScript(editGameScript!);
+    dataList.removeWhere((element) => element.id == editGameScript?.id);
+    dataList.insert(0, editGameScript!);
+    notifyListeners();
+  }
+
+  Future<void> loadEditGameScript() async {
+    editGameScript!.flowList =
+        GameScriptFlowMapper().listByGameScriptId(editGameScript!.id!);
+
+    notifyListeners();
   }
 }

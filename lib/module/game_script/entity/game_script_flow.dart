@@ -16,9 +16,12 @@ class GameScriptFlow {
 
   /// 序号
   int orderNum;
-  GameScriptFlowType type;
 
-  MouseEvent? mouseEvent;
+  /// GameScriptFlowType
+  String? type;
+
+  /// MouseEvent
+  String? mouseEvent;
 
   int? axisX;
   int? axisY;
@@ -32,13 +35,16 @@ class GameScriptFlow {
   GameScriptFlow(
       {this.id,
       this.gameScriptId,
-      this.type = GameScriptFlowType.mouse,
-      this.mouseEvent = MouseEvent.leftClick,
+      String? type,
+      String? mouseEvent,
       this.axisX,
       this.axisY,
       this.axisFloat = 5,
       this.orderNum = 1,
-      this.waitMillisecond});
+      this.waitMillisecond}) {
+    this.type = type ?? GameScriptFlowType.mouse.name;
+    this.mouseEvent = mouseEvent ?? MouseEvent.leftClick.name;
+  }
 
   static List<GameScriptFlow> fromJsonList(List dataList) {
     return dataList.map((e) => GameScriptFlow.fromJson(e)).toList();
@@ -48,4 +54,14 @@ class GameScriptFlow {
       _$GameScriptFlowFromJson(json);
 
   Map<String, dynamic> toJson() => _$GameScriptFlowToJson(this);
+
+  void waitTypeClear() {
+    if (type != GameScriptFlowType.wait.name) {
+      return;
+    }
+
+    mouseEvent = null;
+    axisX = null;
+    axisY = null;
+  }
 }

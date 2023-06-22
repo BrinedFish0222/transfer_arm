@@ -15,39 +15,50 @@ import '../constants/game_script_flow_type.dart';
 
 /// 脚本编辑
 class GameScriptFlowEditWidget extends StatelessWidget {
-  const GameScriptFlowEditWidget({Key? key, this.gameScriptFlow}) : super(key: key);
+  const GameScriptFlowEditWidget({Key? key, this.gameScriptFlow})
+      : super(key: key);
 
   final GameScriptFlow? gameScriptFlow;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => GameScriptFlowModel(data: gameScriptFlow ?? GameScriptFlow()),
+      create: (_) =>
+          GameScriptFlowModel(data: gameScriptFlow ?? GameScriptFlow()),
       child: Consumer<GameScriptFlowModel>(builder: (context, model, _) {
         return ListView(
           children: [
-            LeftRightWidget(leftChild: const SingleLineFittedBox(child: Text('类型')), rightChild: AppDropdownBtn<GameScriptFlowType>(
-              value: model.data?.type ?? GameScriptFlowType.mouse,
-              onChanged: (value) => model.setType = value!,
-              items: GameScriptFlowType.values
-                  .map((e) => DropdownMenuItem<GameScriptFlowType>(
-                value: e,
-                child: Text(e.desc),
-              ))
-                  .toList(),
-            )),
-            if (model.data?.type == GameScriptFlowType.mouse)
+            LeftRightWidget(
+                leftChild: const SingleLineFittedBox(child: Text('类型')),
+                rightChild: AppDropdownBtn<GameScriptFlowType>(
+                  value: model.data?.type == null
+                      ? GameScriptFlowType.mouse
+                      : GameScriptFlowType.getByName(model.data?.type),
+                  onChanged: (value) => model.setType = value!,
+                  items: GameScriptFlowType.values
+                      .map((e) => DropdownMenuItem<GameScriptFlowType>(
+                            value: e,
+                            child: Text(e.description),
+                          ))
+                      .toList(),
+                )),
+            if (model.data?.type == GameScriptFlowType.mouse.name)
               const GsFlowEditMouse(),
-            if (model.data?.type == GameScriptFlowType.wait)
+            if (model.data?.type == GameScriptFlowType.wait.name)
               const GsFlowEditWait(),
-
-            SizedBox(height: 10.h * 3,),
+            SizedBox(
+              height: 10.h * 3,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(onPressed: () => context.pop(), child: const Text("取消")),
-                ElevatedButton(onPressed: () => context.pop(model.data), child: const Text("确认")),
-              ],)
+                ElevatedButton(
+                    onPressed: () => context.pop(), child: const Text("取消")),
+                ElevatedButton(
+                    onPressed: () => context.pop(model.data),
+                    child: const Text("确认")),
+              ],
+            )
           ],
         );
       }),
@@ -63,28 +74,26 @@ class GsFlowEditWait extends StatelessWidget {
   Widget build(BuildContext context) {
     double interval = 10.w;
 
-    return Consumer<GameScriptFlowModel>(
-        builder: (context, model, _) {
-          return Column(children: [
-            AppTextField(
-              title: const TextNotNullWidget('等待时间（毫秒值）'),
-              interval: interval,
-              hintText: '请输入等待时间',
-              onChanged: (val) => model.data?.waitMillisecond = int.parse(val),
-            ),
-
-            AppTextField(
-              title: const Text('浮动数'),
-              hintText: '请输入浮动数',
-              interval: interval,
-              onChanged: (val) => model.data?.axisFloat = int.parse(val),
-            ),
-          ],);
-        }
-    );
+    return Consumer<GameScriptFlowModel>(builder: (context, model, _) {
+      return Column(
+        children: [
+          AppTextField(
+            title: const TextNotNullWidget('等待时间（毫秒值）'),
+            interval: interval,
+            hintText: '请输入等待时间',
+            onChanged: (val) => model.data?.waitMillisecond = int.parse(val),
+          ),
+          AppTextField(
+            title: const Text('浮动数'),
+            hintText: '请输入浮动数',
+            interval: interval,
+            onChanged: (val) => model.data?.axisFloat = int.parse(val),
+          ),
+        ],
+      );
+    });
   }
 }
-
 
 /// 脚本流程鼠标类型表单
 class GsFlowEditMouse extends StatelessWidget {
@@ -92,19 +101,23 @@ class GsFlowEditMouse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameScriptFlowModel>(
-      builder: (context, model, _) {
-        return Column(children: [
-          LeftRightWidget(leftChild: const SingleLineFittedBox(child: Text('鼠标操作类型')), rightChild: AppDropdownBtn<MouseEvent>(
-            value: model.data?.mouseEvent ?? MouseEvent.leftClick,
-            onChanged: (value) => model.setMouseEvent = value!,
-            items: MouseEvent.values
-                .map((e) => DropdownMenuItem<MouseEvent>(
-              value: e,
-              child: Text(e.desc),
-            ))
-                .toList(),
-          )),
+    return Consumer<GameScriptFlowModel>(builder: (context, model, _) {
+      return Column(
+        children: [
+          LeftRightWidget(
+              leftChild: const SingleLineFittedBox(child: Text('鼠标操作类型')),
+              rightChild: AppDropdownBtn<MouseEvent>(
+                value: model.data?.mouseEvent == null
+                    ? MouseEvent.leftClick
+                    : MouseEvent.getByName(model.data?.mouseEvent),
+                onChanged: (value) => model.setMouseEvent = value!,
+                items: MouseEvent.values
+                    .map((e) => DropdownMenuItem<MouseEvent>(
+                          value: e,
+                          child: Text(e.description),
+                        ))
+                    .toList(),
+              )),
           AppTextField(
             title: const TextNotNullWidget('x轴'),
             hintText: '请输入x轴',
@@ -120,10 +133,8 @@ class GsFlowEditMouse extends StatelessWidget {
             hintText: '请输入浮动数',
             onChanged: (val) => model.data?.axisFloat = int.parse(val),
           ),
-        ],);
-      }
-    );
+        ],
+      );
+    });
   }
 }
-
-
