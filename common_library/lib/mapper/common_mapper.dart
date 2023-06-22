@@ -2,7 +2,7 @@ import 'package:common_library/utils/database_helper.dart';
 
 abstract class CommonMapper {
   Future<List<T>> listAll<T>() async {
-    return await DatabaseHelper.instance.listAll<T>();
+    return DatabaseHelper.instance.listAll<T>();
   }
 
   Future<T?> selectById<T>(int id) async {

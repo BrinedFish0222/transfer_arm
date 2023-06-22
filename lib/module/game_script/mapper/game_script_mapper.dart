@@ -7,17 +7,17 @@ import 'package:transfer_arm/module/game_script/entity/game_script.dart';
 import 'game_script_flow_mapper.dart';
 
 class GameScriptMapper extends CommonMapper {
-  void saveGameScript(GameScript gameScript) async {
-    DatabaseHelper.instance.transaction(() async {
+  void saveGameScript(GameScript gameScript) {
+    DatabaseHelper.instance.transaction(() {
       // 保存脚本
       LogUtil.debug('保存脚本');
-      var id = await DatabaseHelper.instance.save<GameScript>(data: gameScript);
+      var id = DatabaseHelper.instance.save<GameScript>(data: gameScript);
       gameScript.id = id;
 
       // 保存脚本节点
       gameScript.flowList
           ?.forEach((element) => element.gameScriptId = gameScript.id);
-      await GameScriptFlowMapper().deleteByGameScriptId(gameScript.id);
+      GameScriptFlowMapper().deleteByGameScriptId(gameScript.id);
       if (CollectionUtil.isNotEmpty(gameScript.flowList)) {
         DatabaseHelper.instance.saveBatch(dataList: gameScript.flowList!);
       }

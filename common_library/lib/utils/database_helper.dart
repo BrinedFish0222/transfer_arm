@@ -1,5 +1,6 @@
 import 'package:path_provider/path_provider.dart';
 import 'package:transfer_arm/objectbox.g.dart';
+
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 
@@ -24,13 +25,11 @@ class DatabaseHelper {
   }
 
   /// 开启事务
-  Future<T> transaction<T>(T Function() function, {TxMode txMode = TxMode.write}) async {
-    final store = Store(getObjectBoxModel());
-
+  T transaction<T>(T Function() function, {TxMode txMode = TxMode.write}) {
     return store.runInTransaction(txMode, function);
   }
 
-  Future<List<T>> select<T>([Condition<T>? qc]) async {
+  List<T> select<T>([Condition<T>? qc]) {
     final box = store.box<T>();
     final query = box.query(qc).build();
     List<T> result = query.find();
@@ -38,54 +37,54 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<List<int>> saveBatch<T>({required List<T>? dataList}) async {
+  List<int> saveBatch<T>({required List<T>? dataList}) {
     final box = store.box<T>();
     return box.putMany(dataList!);
   }
 
-  Future<int> save<T>({required T data}) async {
+  int save<T>({required T data}) {
     final box = store.box<T>();
     return box.put(data);
   }
 
-  Future<List<T>> listAll<T>() async {
+  List<T> listAll<T>() {
     final box = store.box<T>();
     return box.getAll();
   }
 
   /// 根据id查询数据
-  Future<T?> selectById<T>({
+  T? selectById<T>({
     required int id,
-  }) async {
+  }) {
     final box = store.box<T>();
     return box.get(id);
   }
 
   /// 根据id查询数据
-  Future<List<T?>> selectByIds<T>({
+  List<T?> selectByIds<T>({
     required List<int> ids,
-  }) async {
+  }) {
     final box = store.box<T>();
     return box.getMany(ids);
   }
 
   // 示例：删除数据
-  Future<bool> deleteById<T>({required int id}) async {
+  bool deleteById<T>({required int id}) {
     final box = store.box<T>();
     return box.remove(id);
   }
 
-  void deleteByIds<T>({required List<int> ids}) async {
+  void deleteByIds<T>({required List<int> ids}) {
     final box = store.box<T>();
     box.removeMany(ids);
   }
 
-  void deleteAll<T>() async {
+  void deleteAll<T>() {
     final box = store.box<T>();
     box.removeAll();
   }
 
-  Future<int> count<T>() async {
+  int count<T>() {
     final box = store.box<T>();
     return box.count();
   }
