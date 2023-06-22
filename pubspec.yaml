@@ -21,6 +21,7 @@ dependencies:
   path_provider: ^2.0.15
   objectbox_flutter_libs: ^2.1.0
   permission_handler: ^10.3.0
+  image_picker: any
 
 dev_dependencies:
   flutter_test:
