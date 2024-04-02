@@ -11,7 +11,7 @@ class GameScriptRunModel extends ViewStateModel {
   GameScript? runGameScript;
 
   /// 已运行次数
-  int? runningNum;
+  int runningNum = 0;
 
   set setRunningNum(int setRunningNum) {
     LogUtil.debug('接收的已运行次数：$setRunningNum');
@@ -43,7 +43,7 @@ class GameScriptRunModel extends ViewStateModel {
     LogUtil.debug("结束脚本");
     GameScriptHelper.getInstance().stop();
     runGameScript = null;
-    runningNum = null;
+    runningNum = 0;
     notifyListeners();
   }
 }
