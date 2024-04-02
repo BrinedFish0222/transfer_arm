@@ -1,4 +1,3 @@
-
 import 'package:common_library/constants/input_formats.dart';
 import 'package:common_library/utils/common_widget_util.dart';
 import 'package:common_library/utils/confirm_dialog_utils.dart';
@@ -38,6 +37,9 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
   @override
   Widget build(BuildContext context) {
     GameScriptListModel model = context.watch<GameScriptListModel>();
+
+    int flowLength = model.editGameScript?.flowList?.length ?? 0;
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -80,10 +82,13 @@ class _GameScriptFlowPageState extends State<GameScriptFlowPage> {
               ),
               sliver: SliverReorderableList(
                 itemBuilder: (BuildContext context, int index) {
+                  if (index == flowLength) {
+                    return Container(height: 100, key: UniqueKey(),);
+                  }
                   return _buildFlowContent(
                       model, model.editGameScript!.flowList![index]);
                 },
-                itemCount: model.editGameScript?.flowList?.length ?? 0,
+                itemCount: flowLength + 1,
                 onReorder: (int oldIndex, int newIndex) {},
               ),
             )
@@ -247,7 +252,8 @@ class GsFlowMouseWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(GameScriptFlowType.getByName(flow.type).description),
-          if (flow.mouseEvent != null) Text('：${MouseEvent.getByName(flow.mouseEvent).description}'),
+          if (flow.mouseEvent != null)
+            Text('：${MouseEvent.getByName(flow.mouseEvent).description}'),
           if (width != null)
             SizedBox(
               width: width,
