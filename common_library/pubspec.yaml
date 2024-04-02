@@ -28,6 +28,8 @@ dependencies:
     path: ../plugin_library
   transfer_arm:
     path: ../
+  native_library:
+    path: ../native_library
 
   cupertino_icons: ^1.0.2
   logger: ^1.3.0

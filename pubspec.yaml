@@ -11,7 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   common_library:
-    path: ./common_library
+    path: common_library
+  native_library:
+    path: native_library
   flutter_screenutil: ^5.8.2
   go_router: ^7.1.1
   provider: ^6.0.5
