@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   objectbox_flutter_libs
   permission_handler_windows
-  plugin_library
   screen_retriever
   tray_manager
   url_launcher_windows

@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   objectbox_flutter_libs
-  plugin_library
   screen_retriever
   tray_manager
   url_launcher_linux

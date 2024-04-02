@@ -24,8 +24,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_library:
-    path: ../plugin_library
   transfer_arm:
     path: ../
   native_library:

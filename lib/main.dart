@@ -2,7 +2,6 @@ import 'package:common_library/utils/database_helper.dart';
 import 'package:common_library/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:native_library/native_library.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +16,6 @@ void main() async {
 
   await DatabaseHelper.create();
   await ScreenUtil.ensureScreenSize();
-
-  var sumResult = sum(1, 2);
-  print("native sum $sumResult");
-
 
   runApp(const MyApp());
 }
